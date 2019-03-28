@@ -3,18 +3,16 @@ const cheerio = require('cheerio');
 const MongoClient = require('mongodb').MongoClient;
 
 // Connection URL
-const url = 'mongodb://localhost:27017';
+const uri = 'mongodb://localhost:27017';
+// const uri = "mongodb+srv://bgg-app:nullCkzFfO2vRdCixUD@cluster0-f4efh.mongodb.net/bgg";
 
-// Database Name
-const dbName = 'bgg';
+const client = new MongoClient(uri, { useNewUrlParser: true });
 
 // Use connect method to connect to the server
-MongoClient.connect(url, function (err, client) {
+client.connect(err => {
   console.log('Connected successfully to Mongo DB.');
 
-  const db = client.db(dbName);
-
-  const gamesCollection = db.collection('games');
+  const gamesCollection = client.db('bgg').collection('games');
   gamesCollection.createIndex({ id: 1 }, { unique: true });
 
   const fetchPageOfGames = pageNum => {
@@ -54,7 +52,7 @@ MongoClient.connect(url, function (err, client) {
     });
   }
 
-  fetchPagesOfGames(21, 30);
+  fetchPagesOfGames(1, 10);
 
 });
 
